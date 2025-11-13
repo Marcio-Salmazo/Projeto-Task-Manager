@@ -88,11 +88,62 @@ OBSERVAÇÃO: As funcionalidades dos arquivos mais relevantes serão descritas a
 
 ## Descrição dos principais arquivos da estrutura
 
-* Diretório 'backend' →
-* Diretório 'frontend' →
-* Arquivo docker-compose.yml →
-* Arquivo requirements.txt →
+* **Diretório 'backend'** → contém todo o código responsável pela lógica da aplicação, comunicação com o banco de dados e disponibilização de uma API REST para o frontend. Esse diretório é composto pelos seguintes componentes:
 
+    * ***Diretório 'backend'*** → pasta de configurações do projeto Django. Apesar de ter o mesmo nome do diretório principal, esse “segundo backend” tem a função de armazenar os arquivos de configuração e inicialização do Django. Sendo:
+        * ***__init__.py:*** Indica que o diretório é um pacote Python (permite importações internas). 
+        * ***settings.py:*** Cérebro das configurações do projeto (banco de dados, apps instalados, middlewares, REST framework, CORS, etc.). 
+        * ***wsgi.py:*** Ponto de entrada do servidor web em produção (usado por servidores como Gunicorn). 
+        * ***urls.py:*** Define o mapeamento de rotas (URLs) do backend — ou seja, quais caminhos da API executam quais funções.
+        * ***asgi.py:*** Similar ao WSGI, mas voltado para servidores assíncronos (usado com Django Channels, por exemplo). 
+
+    * ***Diretório 'tasks_app'*** → Esse é o aplicativo principal da sua aplicação Django. Um app no Django é um módulo especializado que executa uma função específica do sistema, podendo haver vários apps dentro do mesmo projeto (ex: users_app, payments_app, dentre outros).No nosso caso, *tasks_app* é o módulo que controla o CRUD de tarefas (Create, Read, Update, Delete). Esse diretório é composto pelos seguintes componentes:
+        * ***models.py:*** Define as classes que representam tabelas do banco de dados. (ex: Task)
+        * ***views.py:*** Contém as funções ou classes que respondem às requisições HTTP (ex: listar tarefas, criar novas, excluir etc.).
+        * ***serializers.py:*** Traduz objetos Python ↔ JSON (para que o frontend consiga ler e enviar dados via API).
+        * ***urls.py:*** Define as rotas específicas do app (ex: /api/tasks/).
+        * ***admin.py:*** Permite registrar os modelos no painel administrativo do Django.
+        * ***apps.py:*** Configurações internas do app.
+        * ***Diretório migrations/:*** Armazena scripts automáticos de criação/alteração do banco (quando é executado o makemigrations).
+
+
+    * ***db.sqlite3*** → Esse arquivo é o banco de dados local padrão do Django — ele é criado automaticamente quando executamos o comando *python manage.py migrate*. O SQLite é um banco leve e embutido, que salva os dados em um único arquivo .sqlite3. Ele é ótimo para testes e desenvolvimento local, mas em produção usamos algo mais robusto, como PostgreSQL (que estamos configurando via Docker).
+    * ***manage*** → script de gerenciamento do Django. Esse é o comando mestre do Django, sendo criado junto com o projeto e serve para interagir com toda a estrutura. Esse script é utilizado em quase todas as operações administrativas. Internamente, esse arquivo apenas chama o módulo django.core.management e carrega o ambiente definido em backend/settings.py.
+
+
+* **Diretório 'frontend'** → contém todo o lado do cliente (frontend), desenvolvido com React. Ele é responsável por exibir a interface visual e interagir com a API do backend. Esse diretório é composto pelos seguintes componentes:
+    * Diretório 'node_modules'
+    * Diretório 'public' 
+    * Diretório 'src'
+    * package.json
+    * package-lock.json
+
+* **Arquivo requirements.txt** → Esse arquivo contém todas as dependências Python necessárias para rodar o backend. Ele é usado para que qualquer pessoa (ou container Docker) possa instalar exatamente as mesmas versões das bibliotecas.
+
+* **Arquivo docker-compose.yml** → Esse é o arquivo que orquestra os serviços Docker. Podemos imaginar ele como um “roteiro” que diz ao Docker quais containers criar, como se comunicam e quais recursos cada um usa. Em nosso projeto, ele define o container do PostgreSQL (banco de dados), outras ferramentas como o Django e o React também poderiam ser icluídas no container, mas optou-se por deixar a implementação mais simples por enquanto. Como exemplo temos:
+
+        services:
+        db:
+            image: postgres:14
+            environment:
+                POSTGRES_USER: postgres
+                POSTGRES_PASSWORD: mysecretpassword
+                POSTGRES_DB: task_manager
+            ports:
+                - "5432:5432"
+            volumes:
+                - postgres_data:/var/lib/postgresql/data
+
+            volumes:
+        postgres_data:
+
+    *Sendo:*
+
+    * ***services:*** lista os containers.
+    * ***image:*** especifica a imagem (no caso, postgres:14).
+    * ***environment:*** define variáveis internas (usuário, senha, nome do BD).
+    * ***ports:*** mapeia portas entre o container e o sistema host.
+    * ***volumes:*** cria um volume persistente (mantém os dados mesmo se o container for apagado).
 
 ---
 
