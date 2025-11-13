@@ -1,16 +1,33 @@
 """
-WSGI config for backend project.
+    ASGI config for backend project.
+    It exposes the ASGI callable as a module-level variable named ``application``.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
+    Usuário → Servidor web → (WSGI/ASGI) → Django (views, models, etc.)
+"""
+import os
+from django.core.wsgi import get_wsgi_application
+"""
+    Os arquivos — wsgi.py e asgi.py — são responsáveis por conectar o projeto Django ao servidor web.
+    Eles fazem o papel de “ponte” entre o servidor (que lida com as requisições HTTP reais) 
+    e o framework Django (que processa e responde essas requisições).
 
-For more information on this file, see
-https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
+    Embora o código pareça igual, eles servem a propósitos diferentes:
+        * wsgi.py é usado em aplicações síncronas (tradicionais).
+        * asgi.py é usado em aplicações assíncronas (modernas, com WebSockets e requisições simultâneas).
 """
 
-import os
+"""
+    Define a variável de ambiente DJANGO_SETTINGS_MODULE, informando ao Django qual arquivo de 
+    configurações deve ser usado — neste caso, backend/settings.py.
 
-from django.core.wsgi import get_wsgi_application
-
+    Em outras palavras, isso garante que, quando o servidor iniciar, o Django saiba onde estão as 
+    configurações do banco de dados, apps instalados, middlewares, etc.
+"""
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 
+"""
+    Cria o objeto application, que é a porta de entrada da aplicação Django.
+    Esse objeto é o que o servidor web executa a cada requisição HTTP recebida, ou seja, 
+    ele é a interface entre o servidor e o Django.
+"""
 application = get_wsgi_application()
