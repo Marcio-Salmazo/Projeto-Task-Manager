@@ -19,6 +19,8 @@ from .serializers import TaskSerializer
 """
 
 
+# O arquivo importa Task do modelo a qual define a estrutra da tabela no banco de dados
+# TaskViewSet é registrado nas rotas em urls e apresenta o ponto de conexão com o DB
 class TaskViewSet(viewsets.ModelViewSet):
     # Define quais objetos do banco de dados serão usados por essa view.
     # Task.objects.all() → seleciona todas as tarefas (SELECT * FROM tasks).
@@ -31,4 +33,5 @@ class TaskViewSet(viewsets.ModelViewSet):
             * Estrutura JSON que a API envia ou recebe
         O TaskSerializer cuida dessa tradução.
     """
+    # Transforma o objeto python para o comando SQL
     serializer_class = TaskSerializer

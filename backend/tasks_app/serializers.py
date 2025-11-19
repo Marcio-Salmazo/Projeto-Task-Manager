@@ -30,7 +30,7 @@ class TaskSerializer(serializers.ModelSerializer):
         Essa estrutura é usada no Django e DRF para definir configurações adicionais sobre
         o comportamento da classe principal.
     """
-
+    # A ORM do Django traduz a operação no banco e aplica a operação
     class Meta:
         # Neste caso, o Task, que representa a tabela de tarefas no banco.
         model = Task  # Diz ao serializer qual modelo Django ele deve usar como base.

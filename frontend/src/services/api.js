@@ -24,6 +24,10 @@ import axios from "axios";
     Isso significa que, quando o React faz algo como: api.get("tasks/"); o Axios monta automaticamente a URL completa:
     'http://127.0.0.1:8000/api/tasks/' Sem precisar repetir o endereço toda vez.
 */
+
+// Resumo: Concatena o endereço e envia a requisição
+// A rota para a requisição foi mapeada em urls.py no back
+// A api é chamada em TaskForm (via import e usada diretamente lá)
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
 });

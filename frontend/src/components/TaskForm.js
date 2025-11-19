@@ -29,18 +29,22 @@ function TaskForm({ onTaskCreated }) {
     * 'setTitle' é a função que atualiza esse estado.
     * Esse é um controlled input: o valor exibido no <Form.Control> é o valor do estado React.
   */
+
+  // Resumo: Define o estado inicial com o valor vazio.
   const [title, setTitle] = useState("");
 
-  const handleSubmit = async (e) => { // Função assíncrona que responde ao evento de submit do formulário.
+  // Função assíncrona que responde ao evento de submit do formulário.
+  const handleSubmit = async (e) => {
     e.preventDefault(); // Evita o comportamento padrão do formulário (recarregar a página).
 
     // Envia uma requisição POST para o endpoint /api/tasks/ com o payload { title: "..." }.
-    // O DRF no backend recebe, valida e cria um novo registro Task no banco.
+    // O DRF (Django Rest Framework) no backend recebe, valida e cria um novo registro Task no banco.
+    // Resumo: chama api.js para comunicar com o back e limpa a entrada.
     await api.post("tasks/", { title });
     setTitle(""); // limpa o campo de entrada ao finalizar o envio.
 
     // notifica o componente pai para atualizar a lista (normalmente este pai
-    // invertendo o estado reload ou chamando loadTasks()).
+    // inverte o estado reload ou chamando loadTasks()).
     onTaskCreated();
   };
 
@@ -52,6 +56,8 @@ function TaskForm({ onTaskCreated }) {
     * required — atributo HTML que impede submissão se o campo estiver vazio (validação no cliente).
     * <Button type="submit"> — botão que dispara o evento submit.
   */
+
+  // Resumo: Retorna o formato do formulário HTML (Trecho responsável por sua exibição)
   return (
     <Form onSubmit={handleSubmit} className="mt-3">
       <Form.Group className="mb-3" controlId="formTaskTitle">

@@ -31,6 +31,8 @@ from tasks_app.views import TaskViewSet
         
         Tudo isso sem precisar escrever manualmente cada rota.
 """
+
+# Resumo: Mapeamento de api/ para router.urls, com tasks apontando para TaskViewSet em Views
 router = routers.DefaultRouter()
 router.register(r'tasks', TaskViewSet)
 
